@@ -137,3 +137,11 @@ class Flight(models.Model):
   f = Flight(origin = jfk, destination = cdg, duration = 435)
   f.save() 
 ```
+## Use Django Admin App
+* Run **python manage.py createsuperuser**
+* Add models on **admin.py**
+```
+from .models import Flight, Airport
+
+admin.site.register(Airport)
+admin.site.register(Flight)
