@@ -274,3 +274,20 @@ def flight(request, flight_id):
         "non_passengers": Passenger.objects.exclude(flights=flight).all()
     })
 ```
+## Modify Admin appearance
+* On **admin.py** classes that inherit from admin.Model can be created to modify admin.html appearance.
+
+```
+class FlightAdmin(admin.ModelAdmin):
+    list_display = ("id", "origin", "destination", "duration")
+
+
+class PassengerAdmin(admin.ModelAdmin):
+    filter_horizontal = ("flights", )
+
+
+admin.site.register(Airport)
+admin.site.register(Flight, FlightAdmin)
+admin.site.register(Passenger, PassengerAdmin)
+
+```
