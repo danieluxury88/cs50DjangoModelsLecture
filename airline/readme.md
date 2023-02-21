@@ -145,3 +145,38 @@ from .models import Flight, Airport
 
 admin.site.register(Airport)
 admin.site.register(Flight)
+```
+
+* Start server, open /admin site and create new Airports and Flights
+
+* Create new url to view flights details
+  * add new path **urls.py**, function **views.py** and html template **flight.html**
+
+```
+urlpatterns =[
+    path("", views.index, name="index"),
+    path("<int:flight_id>", views.flight, name="flight"),
+]
+```
+
+```
+def flight(request, flight_id):
+    # flight = Flight.objects.get(id=flight_id)
+    flight = Flight.objects.get(pk=flight_id)
+    return render(request, "flights/flight.html", {
+        "flight": flight
+    })
+```
+
+```
+{% extends "flights/layout.html" %}
+
+{% block body %}
+  <h1>Flight {{flight.id}}</h1>
+  <ul>
+    <li>Origin: {{ flight.origin }}</li>
+    <li>Destination: {{ flight.destination }}</li>
+    <li>Duration: {{ flight.duration }}</li>
+  </ul>
+{% endblock %}
+```
