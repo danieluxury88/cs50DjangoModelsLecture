@@ -291,3 +291,73 @@ admin.site.register(Flight, FlightAdmin)
 admin.site.register(Passenger, PassengerAdmin)
 
 ```
+
+## Authentication: Create users app
+* Run python manage.py startapp users
+* Register app in INSTALLED_APPS in **settings.py**
+* Add urls of new app in **urls.py**
+* Create app **urls.py** and add 3 paths: index, login and logout
+```
+from django.urls import path
+
+from .import views
+
+urlpatterns =[
+    path("", views.index, name="index"),
+    path("login", views.login_view, name="login"),
+    path("logout", views.logout_view, name="logout"),
+]
+```
+
+* Create functions in **views.py**
+```
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+
+
+# Create your views here.
+def index(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("login"))
+
+def login_view(request):
+    return render(request, "users/login.html")
+
+def logout_view(request):
+    pass
+
+```
+
+* Create layout.html and login.html
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>
+```
+
+```
+{% extends "users/layout.html" %}
+
+{% block body %}
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <input type="submit" value="Login">
+
+    </form>
+
+{% endblock %}
+```
+
+* Enter admin url and create user
+* Log out and enter users url
