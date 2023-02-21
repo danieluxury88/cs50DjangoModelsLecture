@@ -235,6 +235,42 @@ def flight(request, flight_id):
     {% endfor %}
 ```
 
+## Add feature to allow booking
+* Add new path on **urls.py**
+```
+path("<int:flight_id>/book", views.book, name="book"),
+```
+* Add new book function on **views.py**, using reverse method which uses the name defined on **urls.py**
+```
+def book(request, flight_id):
+    if request.method == "POST":
+        flight = Flight.objects.get(pk=flight_id)
+        passenger = Passenger.objects.get(pk=int(request.POST["passenger"]))
+        passenger.flights.add(flight)
+        return HttpResponseRedirect(reverse("flight", args=(flight.id,)))
 
+```
+* Add a form on flight.html to allow booking not already booked passengers into a flight
+```
+<h2>Add Passenger</h2>
+<form action=" {% url 'book' flight.id %}" method="POST" >
+    {% csrf_token %}
+    <select name="passenger">
+        {% for passenger in non_passengers %}
+            <option value="{{ passenger.id }}">{{ passenger }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit">
+</form>
 
-
+```
+* Modify flight function in **views.py** to include a list of not registered passengers in current flight using exclude method (opposite of filter)
+```
+def flight(request, flight_id):
+    flight = Flight.objects.get(pk=flight_id)
+    return render(request, "flights/flight.html", {
+        "flight": flight,
+        "passengers": flight.passengers.all(),
+        "non_passengers": Passenger.objects.exclude(flights=flight).all()
+    })
+```
