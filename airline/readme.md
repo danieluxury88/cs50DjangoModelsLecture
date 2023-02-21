@@ -180,3 +180,21 @@ def flight(request, flight_id):
   </ul>
 {% endblock %}
 ```
+
+## Create new Passenger model
+* Add Passenger class in models.py
+```
+  class Passenger(models.Model):
+  first_name = models.CharField(max_length=64)
+  last_name = models.CharField(max_length=64)
+  flights = models.ManyToManyField(Flight, blank = True, related_name="passengers")
+
+
+  def __str__(self):
+    return f"{self.first_name} {self.last_name}"
+```
+
+* Perform migrations since new models were created **python manage.py makemigrations** and **python manage.py migrate**
+* Register new Passenger model on **admin.py**
+* Open /admin and create new passengers
+
