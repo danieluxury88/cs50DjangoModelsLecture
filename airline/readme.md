@@ -198,3 +198,28 @@ def flight(request, flight_id):
 * Register new Passenger model on **admin.py**
 * Open /admin and create new passengers
 
+## Add Passenger list on Flight view
+* On **views.py** modify flight function to send passengers list to **flight.html**
+```
+  def flight(request, flight_id):
+  flight = Flight.objects.get(pk=flight_id)
+  return render(request, "flights/flight.html", {
+    "flight": flight,
+    "passengers": flight.passengers.all()
+    })
+```
+
+```
+<h2>Passengers</h2>
+<ul>
+    {% for passenger in passengers %}
+    <li>{{ passenger}}</li>
+    {% empty %}
+    <li>No passengers</li>
+    {% endfor %}
+</ul>
+
+```
+
+
+
