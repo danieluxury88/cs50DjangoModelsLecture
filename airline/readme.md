@@ -218,8 +218,23 @@ def flight(request, flight_id):
     <li>No passengers</li>
     {% endfor %}
 </ul>
+```
+
+* Add link to go between flights list and details, adding <a href> on html files
+```
+<a href="{% url 'index' %}">Back to Flight List</a>
+```
 
 ```
+    {% for flight in flights %}
+      <li>
+        <a href="{% url 'flight' flight.id %}">
+        Flight {{ flight.id }} : {{ flight.origin }} to {{ flight.destination }}
+          </a>
+      </li>
+    {% endfor %}
+```
+
 
 
 
