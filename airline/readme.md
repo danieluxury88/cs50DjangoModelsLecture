@@ -82,3 +82,58 @@ class Flight(models.Model):
   lhr.arrivals.all()
   jfk.departures.all()
 ```
+
+## Create views to display list of flights
+* In **ulrs.py** add
+```
+  urlpatterns =[
+    path("", views.index, name="index"),
+]
+```
+* In **views.py** add index function 
+```
+  def index(request):
+    return render(request, "flights/index.html", {
+        "flights": Flight.objects.all()
+    })
+```
+* Create folders **templates/flights** and add **layout.html**
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flights</title>
+</head>
+<body>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>
+```
+* Add **index.html**
+```
+{% extends "flights/layout.html" %}
+
+{% block body %}
+  <h1>Flights</h1>
+  <ul>
+    {% for flight in flights %}
+      <li>Flight {{ flight.id }} : {{ flight.origin }} to {{ flight.destination }} </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+```
+
+* Enter Shell **python manage.py shell** to create new airports and flights
+```
+  from flights.models import *
+  Airport.objects.filter(city="New York")
+  Airport.objects.filter(city="New York").first()
+  Airport.objects.get(city="New York") #only works when only one meeting criteria exists 
+  
+  jfk = Airport.objects.get(city="New York")
+  cdg = Airport.objects.get(city="Paris")
+  f = Flight(origin = jfk, destination = cdg, duration = 435)
+  f.save() 
+```
